@@ -1,43 +1,43 @@
 # Airline Passenger Satisfaction Prediction ✈️
 
 ## 1. Description of the Problem
-[cite_start]This project aims to predict airline passenger satisfaction (Satisfied vs. Neutral/Dissatisfied) based on various service attributes and flight details [cite: 1-14]. Understanding passenger satisfaction is crucial for airlines to minimize churn rates, improve service quality, and optimize operational costs. [cite_start]We approach this as a binary classification problem using advanced machine learning techniques [cite: 15-22].
+This project aims to predict airline passenger satisfaction (Satisfied vs. Neutral/Dissatisfied) based on various service attributes and flight details. Understanding passenger satisfaction is crucial for airlines to minimize churn rates, improve service quality, and optimize operational costs. We approach this as a binary classification problem using advanced machine learning techniques.
 
 ## 2. Details of the Dataset and Preprocessing
 **Dataset:** The complete dataset consists of **129,880 observations**. It is pre-split into a **Training Set of 103,904 entries** and a **Testing Set of 25,976 entries**.
-* [cite_start]**Target Distribution:** The dataset is well-balanced with **56.7% Neutral/Dissatisfied** and **43.3% Satisfied** passengers, ensuring no significant class imbalance [cite: 98-105].
+* **Target Distribution:** The dataset is well-balanced with **56.7% Neutral/Dissatisfied** and **43.3% Satisfied** passengers, ensuring no significant class imbalance.
 
 ![Data Distribution](images/data_distrubition.png)
 
 **Preprocessing Procedures:**
-* [cite_start]**Handling Missing Values:** Missing values in the `Arrival Delay in Minutes` column were imputed using the **median** strategy to maintain data integrity [cite: 107-109].
+* **Handling Missing Values:** Missing values in the `Arrival Delay in Minutes` column were imputed using the **median** strategy to maintain data integrity.
 * **Feature Selection:**
     * Irrelevant columns such as `id`, `Unnamed: 0`, and **`Gender`** were dropped to simplify the model.
-    * [cite_start]`Departure Delay` was removed due to high multicollinearity (96%) with `Arrival Delay` [cite: 112-113].
+    * `Departure Delay` was removed due to high multicollinearity (96%) with `Arrival Delay`.
 * **Encoding:**
     * **Manual Mapping:** Applied to `Class` (Eco:0, Eco Plus:1, Business:2) and `satisfaction` (Neutral/Dissatisfied:0, Satisfied:1) to preserve ordinal meaning.
     * **Label Encoding:** Used for remaining categorical features (`Customer Type`, `Type of Travel`) to convert them into numeric format.
 
 ## 3. Model Details and Methodology
-[cite_start]We evaluated multiple machine learning algorithms: **Logistic Regression, Random Forest, LightGBM, CatBoost, and XGBoost** [cite: 136-142].
+We evaluated multiple machine learning algorithms: **Logistic Regression, Random Forest, LightGBM, CatBoost, and XGBoost**.
 
 **Experimental Approach (Feature Engineering Hypothesis):**
-[cite_start]Before finalizing the model, we implemented a domain-driven feature aggregation strategy to reduce dimensionality [cite: 115-118]. We hypothesized that grouping specific services into macro-categories would simplify the model without losing accuracy.
+Before finalizing the model, we implemented a domain-driven feature aggregation strategy to reduce dimensionality. We hypothesized that grouping specific services into macro-categories would simplify the model without losing accuracy.
 
 * **Constructed Features:**
     1.  **Digital Score:** Average of *Inflight Wifi, Online Booking, Online Boarding*.
     2.  **Comfort Score:** Average of *Food & Drink, Seat Comfort, Entertainment, Leg Room, Cleanliness*.
     3.  **Staff Score:** Average of *Gate Location, On-board Service, Check-in, Baggage Handling*.
-* [cite_start]**Experiment Result:** The model trained on these 3 composite scores (instead of the original 14 features) saw an accuracy drop from **96.45%** to **~92.00%** [cite: 119-120].
-* **Conclusion:** The aggregation caused information loss. The model performs significantly better when it can access granular signals (e.g., distinguishing "Wifi" specifically from general "Digital" interaction). [cite_start]Therefore, the final model uses all original features [cite: 121-124].
+* **Experiment Result:** The model trained on these 3 composite scores (instead of the original 14 features) saw an accuracy drop from **96.45%** to **~92.00%**.
+* **Conclusion:** The aggregation caused information loss. The model performs significantly better when it can access granular signals (e.g., distinguishing "Wifi" specifically from general "Digital" interaction). Therefore, the final model uses all original features.
 
 **Optimization Strategy:**
-[cite_start]We utilized **Optuna (Bayesian Optimization)** to efficiently search the hyperparameter space, maximizing model performance while managing computational resources [cite: 143-145].
+We utilized **Optuna (Bayesian Optimization)** to efficiently search the hyperparameter space, maximizing model performance while managing computational resources.
 
 ## 4. Model Benchmarking & Selection (Performance Analysis)
-[cite_start]Following the feedback regarding **Inference Time** during the project presentation, we conducted a comprehensive benchmark measuring Accuracy, Development Cost, and Real-Time Latency [cite: 184-191].
+Following the feedback regarding **Inference Time** during the project presentation, we conducted a comprehensive benchmark measuring Accuracy, Development Cost, and Real-Time Latency.
 
-| Model | Accuracy | Optimization Time (Dev Cost) ⏳ | Inference Latency (Per Passenger) ⚡ | Verdict |
+| Model | Accuracy | Optimization Time (s)  | Inference Latency (ms)  | Verdict |
 | :--- | :--- | :--- | :--- | :--- |
 | **XGBoost** | **96.45%** | **~50 s** (Efficient) | **0.0042 ms** (Real-Time) | **🏆 SELECTED** |
 | **CatBoost** | 96.12% | ~200 s (High Cost) | **0.0007 ms** (Fastest) | Too slow to optimize |
@@ -49,7 +49,7 @@
 During our detailed analysis, we observed an important trade-off:
 1.  **CatBoost's Latency:** CatBoost achieved the fastest inference speed (**0.0007 ms**) due to its symmetric tree structure.
 2.  **The Training Bottleneck:** However, CatBoost's training and optimization process was **4x slower** than XGBoost.
-3.  **Final Decision:** We selected **XGBoost** as the production model because it offers the optimal balance. [cite_start]It provides the highest **Accuracy (96.45%)** and a latency of **0.0042 ms**, which is computationally negligible for real-time applications, while being significantly faster to train/retrain than CatBoost [cite: 181-183].
+3.  **Final Decision:** We selected **XGBoost** as the production model because it offers the optimal balance. It provides the highest **Accuracy (96.45%)** and a latency of **0.0042 ms**, which is computationally negligible for real-time applications, while being significantly faster to train/retrain than CatBoost.
 
 ## 5. Model Results & Visualizations
 
@@ -93,11 +93,11 @@ To visualize the model's performance on individual passengers, we tested random 
 * **Error Analysis:** As seen in row 0 (Passenger ID 9408), the model predicted "Neutral/Dissatisfied" (0) while the actual status was "Satisfied" (1). Such occasional misclassifications are expected in stochastic models, yet the overall high accuracy (96.45%) remains robust for production use.
 
 ## 6. Business Insights & Recommendations
-[cite_start]Based on the model's findings (SHAP values & Feature Importance), we propose the following strategies [cite: 267-276]:
+Based on the model's findings (SHAP values & Feature Importance), we propose the following strategies:
 
-1.  **Adopt a "Digital First" Strategy:** Wifi & Online Boarding impact satisfaction more than physical comfort. [cite_start]Airlines should prioritize IT infrastructure investments over seat upgrades [cite: 268-270].
-2.  **Focus on "Personal Travelers":** Unlike business travelers, leisure travelers show a higher churn risk. [cite_start]Targeted loyalty campaigns should be launched specifically for personal travel [cite: 271-273].
-3.  **Optimize Budget Allocation:** "Food and Drink" has negligible impact on passenger decisions. [cite_start]Catering budgets can be optimized to reallocate funds toward improving connectivity and digital services [cite: 274-276].
+1.  **Adopt a "Digital First" Strategy:** Wifi & Online Boarding impact satisfaction more than physical comfort. Airlines should prioritize IT infrastructure investments over seat upgrades.
+2.  **Focus on "Personal Travelers":** Unlike business travelers, leisure travelers show a higher churn risk. Targeted loyalty campaigns should be launched specifically for personal travel.
+3.  **Optimize Budget Allocation:** "Food and Drink" has negligible impact on passenger decisions. Catering budgets can be optimized to reallocate funds toward improving connectivity and digital services.
 
 ## 7. Instructions for Execution
 
