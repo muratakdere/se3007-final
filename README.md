@@ -43,7 +43,7 @@ Following the feedback regarding **Inference Time** during the project presentat
 | **CatBoost** | 96.40% | 200.7 s (High Cost) | **0.0007 ms** (Fastest) | Too slow to optimize |
 | **LightGBM** | 96.36% | 61.2 s  | 0.0047 ms | Lower Accuracy than XGB |
 | **Random Forest**| 96.33% | 65.0 s | 0.0058 ms | Slowest Inference |
-| **Logistic Reg.**| ~87.21% | 6.7 s  | 0.0005 ms | Underfitting (Low Accuracy) |
+| **Logistic Reg.**| 87.21% | 6.7 s  | 0.0005 ms | Underfitting (Low Accuracy) |
 
 ### 💡 Why XGBoost? (Discussion on Inference Time)
 During our detailed analysis, we observed an important trade-off:
@@ -52,6 +52,25 @@ During our detailed analysis, we observed an important trade-off:
 3.  **Final Decision:** We selected **XGBoost** as the production model because it offers the optimal balance. It provides the highest **Accuracy (96.45%)** and a latency of **0.0042 ms**, which is computationally negligible for real-time applications, while being significantly faster to train/retrain than CatBoost.
 
 ## 5. Model Results & Visualizations
+
+### Example Inference (Real-time Predictions) 🔍
+To visualize the model's performance on individual passengers, we tested random samples from the unseen test set.
+
+![Example Inference Results](images/sample_inference.PNG)
+
+**Analysis of Sample:**
+* The table above displays a random sample of 10 predictions.
+* The model correctly classified **9 out of 10** passengers.
+* **Error Analysis:** As seen in row 0 (Passenger ID 9408), the model predicted "Neutral/Dissatisfied" (0) while the actual status was "Satisfied" (1). Such occasional misclassifications are expected in stochastic models, yet the overall high accuracy (96.45%) remains robust for production use.
+
+### Training Process (Learning Curve) 📉
+The plot below demonstrates the model's learning progress over ~260 iterations.
+
+![Training Curve](images/training_curve.png)
+
+**Analysis of the Curve:**
+* **Rapid Convergence:** The model achieves significant loss reduction within the first 50 iterations.
+* **No Overfitting:** The **Train Loss (Blue)** and **Test Loss (Orange)** curves descend in parallel and remain close throughout the training process. The absence of a divergence between the two lines confirms that the model generalizes well to unseen data and is not memorizing the training set.
 
 ### Feature Importance & SHAP Analysis 🧠
 To go beyond simple feature importance, we utilized **SHAP (SHapley Additive exPlanations)** values to understand the *direction* and *magnitude* of each feature's impact on passenger satisfaction.
@@ -72,25 +91,6 @@ The model demonstrates balanced performance with high True Positive (10783) and 
 Consistent with SHAP analysis, the built-in importance plot highlights **"Online boarding"** as the dominant feature, reinforcing the importance of the digital check-in experience.
 
 ![Feature Importance](images/feature_importance.png)
-
-### Training Process (Learning Curve) 📉
-The plot below demonstrates the model's learning progress over ~260 iterations.
-
-![Training Curve](images/training_curve.png)
-
-**Analysis of the Curve:**
-* **Rapid Convergence:** The model achieves significant loss reduction within the first 50 iterations.
-* **No Overfitting:** The **Train Loss (Blue)** and **Test Loss (Orange)** curves descend in parallel and remain close throughout the training process. The absence of a divergence between the two lines confirms that the model generalizes well to unseen data and is not memorizing the training set.
-
-### Example Inference (Real-time Predictions) 🔍
-To visualize the model's performance on individual passengers, we tested random samples from the unseen test set.
-
-![Example Inference Results](images/sample_inference.PNG)
-
-**Analysis of Sample:**
-* The table above displays a random sample of 10 predictions.
-* The model correctly classified **9 out of 10** passengers.
-* **Error Analysis:** As seen in row 0 (Passenger ID 9408), the model predicted "Neutral/Dissatisfied" (0) while the actual status was "Satisfied" (1). Such occasional misclassifications are expected in stochastic models, yet the overall high accuracy (96.45%) remains robust for production use.
 
 ## 6. Business Insights & Recommendations
 Based on the model's findings (SHAP values & Feature Importance), we propose the following strategies:
