@@ -85,7 +85,7 @@ The plot below demonstrates the model's learning progress over ~260 iterations.
 ### Example Inference (Real-time Predictions) 🔍
 To visualize the model's performance on individual passengers, we tested random samples from the unseen test set.
 
-![Example Inference Results](images/sample_inference.png)
+![Example Inference Results](images/sample_inference.PNG)
 
 **Analysis of Sample:**
 * The table above displays a random sample of 10 predictions.
