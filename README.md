@@ -39,11 +39,11 @@ Following the feedback regarding **Inference Time** during the project presentat
 
 | Model | Accuracy | Optimization Time (s)  | Inference Latency (ms)  | Verdict |
 | :--- | :--- | :--- | :--- | :--- |
-| **XGBoost** | **96.45%** | **~50 s** (Efficient) | **0.0042 ms** (Real-Time) | **🏆 SELECTED** |
-| **CatBoost** | 96.12% | ~200 s (High Cost) | **0.0007 ms** (Fastest) | Too slow to optimize |
-| **LightGBM** | 96.30% | ~40 s (Fastest) | 0.0047 ms | Lower Accuracy than XGB |
-| **Random Forest**| 95.80% | ~60 s | 0.0058 ms | Slowest Inference |
-| **Logistic Reg.**| ~87.50% | ~5 s | 0.0005 ms | Underfitting (Low Accuracy) |
+| **XGBoost** | **96.45%** | **47.6 s** (Efficient) | **0.0042 ms** (Real-Time) | **🏆 SELECTED** |
+| **CatBoost** | 96.40% | 200.7 s (High Cost) | **0.0007 ms** (Fastest) | Too slow to optimize |
+| **LightGBM** | 96.36% | 61.2 s  | 0.0047 ms | Lower Accuracy than XGB |
+| **Random Forest**| 96.33% | 65.0 s | 0.0058 ms | Slowest Inference |
+| **Logistic Reg.**| ~87.21% | 6.7 s  | 0.0005 ms | Underfitting (Low Accuracy) |
 
 ### 💡 Why XGBoost? (Discussion on Inference Time)
 During our detailed analysis, we observed an important trade-off:
