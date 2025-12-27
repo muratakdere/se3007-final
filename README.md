@@ -101,7 +101,18 @@ Based on the model's findings (SHAP values & Feature Importance), we propose the
 
 ## 7. Instructions for Execution
 
+### Environment
+- Python 3.10
+
 ### Prerequisites
 Install the required libraries using the provided requirements file:
 ```bash
 pip install -r requirements.txt
+```
+
+### Running The Project
+Open the `main.ipynb` file.
+
+Execute all cells sequentially from top to bottom.
+
+The notebook performs data preprocessing, model training, evaluation, and visualization.
