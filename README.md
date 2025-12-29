@@ -28,7 +28,7 @@ Before finalizing the model, we implemented a domain-driven feature aggregation 
     1.  **Digital Score:** Average of *Inflight Wifi, Online Booking, Online Boarding*.
     2.  **Comfort Score:** Average of *Food & Drink, Seat Comfort, Entertainment, Leg Room, Cleanliness*.
     3.  **Staff Score:** Average of *Gate Location, On-board Service, Check-in, Baggage Handling*.
-* **Experiment Result:** The model trained on these 3 composite scores (instead of the original 14 features) saw an accuracy drop from **96.45%** to **~92.00%**.
+* **Experiment Result:** The model trained on these 3 composite scores (instead of the original 14 features) saw an accuracy drop from **96.48%** to **~92.12%**.
 * **Conclusion:** The aggregation caused information loss. The model performs significantly better when it can access granular signals (e.g., distinguishing "Wifi" specifically from general "Digital" interaction). Therefore, the final model uses all original features.
 
 **Optimization Strategy:**
@@ -39,17 +39,17 @@ Following the feedback regarding **Inference Time** during the project presentat
 
 | Model | Accuracy | Optimization Time (s)  | Inference Latency (ms)  | Verdict |
 | :--- | :--- | :--- | :--- | :--- |
-| **XGBoost** | **96.45%** | **47.6 s** (Efficient) | **0.0042 ms** (Real-Time) | **🏆 SELECTED** |
-| **CatBoost** | 96.40% | 200.7 s (High Cost) | **0.0007 ms** (Fastest) | Too slow to optimize |
-| **LightGBM** | 96.36% | 61.2 s  | 0.0047 ms | Lower Accuracy than XGB |
-| **Random Forest**| 96.33% | 65.0 s | 0.0058 ms | Slowest Inference |
-| **Logistic Reg.**| 87.21% | 6.7 s  | 0.0005 ms | Underfitting (Low Accuracy) |
+| **XGBoost** | **96.48%** | **47.6 s**  | **0.0029 ms**  | **🏆 SELECTED** |
+| **CatBoost** | 96.38% | 211.3 s  | **0.0016 ms**  | Too slow to optimize |
+| **LightGBM** | 96.43% | 52.8 s  | 0.0021 ms | Lower Accuracy than XGB |
+| **Random Forest**| 96.35% | 64.5 s | 0.0066 ms | Slowest Inference |
+| **Logistic Reg.**| 87.14% | 7.4 s  | 0.0006 ms | Underfitting (Low Accuracy) |
 
 ### 💡 Why XGBoost? (Discussion on Inference Time)
 During our detailed analysis, we observed an important trade-off:
-1.  **CatBoost's Latency:** CatBoost achieved the fastest inference speed (**0.0007 ms**) due to its symmetric tree structure.
+1.  **CatBoost's Latency:** CatBoost achieved the faster inference speed (**0.0016 ms**) due to its symmetric tree structure.
 2.  **The Training Bottleneck:** However, CatBoost's training and optimization process was **4x slower** than XGBoost.
-3.  **Final Decision:** We selected **XGBoost** as the production model because it offers the optimal balance. It provides the highest **Accuracy (96.45%)** and a latency of **0.0042 ms**, which is computationally negligible for real-time applications, while being significantly faster to train/retrain than CatBoost.
+3.  **Final Decision:** We selected **XGBoost** as the production model because it offers the optimal balance. It provides the highest **Accuracy (96.48%)** and a latency of **0.0029 ms**, which is computationally negligible for real-time applications, while being significantly faster to train/retrain than CatBoost.
 
 ## 5. Model Results & Visualizations
 
@@ -61,7 +61,7 @@ To visualize the model's performance on individual passengers, we tested random 
 **Analysis of Sample:**
 * The table above displays a random sample of 10 predictions.
 * The model correctly classified **9 out of 10** passengers.
-* **Error Analysis:** As seen in row 0 (Passenger ID 9408), the model predicted "Neutral/Dissatisfied" (0) while the actual status was "Satisfied" (1). Such occasional misclassifications are expected in stochastic models, yet the overall high accuracy (96.45%) remains robust for production use.
+* **Error Analysis:** As seen in row 0 (Passenger ID 9408), the model predicted "Neutral/Dissatisfied" (0) while the actual status was "Satisfied" (1). Such occasional misclassifications are expected in stochastic models, yet the overall high accuracy (96.48%) remains robust for production use.
 
 ### Training Process (Learning Curve) 📉
 The plot below demonstrates the model's learning progress over ~260 iterations.
